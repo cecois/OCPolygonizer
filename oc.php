@@ -14,10 +14,10 @@
 <select id="rid">
   
 <?php
-include "dbh2.php";
+include "dbh.php";
 $h=$_GET['hash'];
 $sql1 = "SELECT * from oc_geo where hash=".$h;
-$result1 = pg_query($dbh2, $sql1);
+$result1 = pg_query($dbh, $sql1);
  if (!$result1) {
      die("Error in SQL query: " . pg_last_error());
  } else {
