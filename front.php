@@ -17,9 +17,9 @@ document.getElementById('poly_frame').src='nom.php?geo_name='+geoname+'&hash='+h
 <select name="geo_name" id="geo_id">
   
 <?php
-include "dbh.php";
+include "dbh2.php";
 $sql1 = "SELECT * from oc_geo";
-$result1 = pg_query($dbh, $sql1);
+$result1 = pg_query($dbh2, $sql1);
  if (!$result1) {
      die("Error in SQL query: " . pg_last_error());
  } else {
