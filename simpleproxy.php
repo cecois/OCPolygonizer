@@ -231,7 +231,11 @@ foreach ($tags as $tag) {
 if(strpos($tag->nodeValue, 'OSM:')===0){
 $relation=preg_split('/ /',$tag->nodeValue);
 $relation[2];
-include "dbh.php";
+include "config.php";
+ $dbh = pg_connect("host=".$dbhost." dbname=".$dbname." user=".$dbuser." password='".$dbpsswd."'");
+        if (!$dbh) {
+            die("Error in connection: " . pg_last_error());
+        }
 $sqlgetsgeo = "select name,osm_id,st_asgeojson(st_transform(way,4326)) as the_geom from planet_osm_polygon where osm_id=-".$relation[2].";";
 $result = pg_query($dbh, $sqlgetsgeo);
  if (!$result) {
@@ -276,7 +280,7 @@ $result = pg_query($dbh, $sqlgetsgeo);
 			cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
 	
-		map.setView(new L.LatLng(39.77, -86.16), 6).addLayer(cloudmade);
+		map.setView(new L.LatLng(39.77, -86.16), 3).addLayer(cloudmade);
 		
 		var BaseballIcon = L.Icon.extend({
 			iconUrl: 'http://leaflet.cloudmade.com/examples/baseball-marker.png',

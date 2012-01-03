@@ -14,7 +14,11 @@
 <select id="rid">
   
 <?php
-include "dbh2.php";
+include "config.php";
+$dbh2 = pg_connect("host=".$dbhost." dbname=".$dbname." user=".$dbuser." password=".$dbpsswd);
+        if (!$dbh2) {
+            die("Error in connection: " . pg_last_error());
+        }
 $h=$_GET['hash'];
 $sql1 = "SELECT * from oc_geo where hash=".$h;
 $result1 = pg_query($dbh2, $sql1);
@@ -42,7 +46,7 @@ echo		"<script type='text/javascript'>
 			cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
 	
-		map.setView(new L.LatLng(39.77, -86.16), 6).addLayer(cloudmade);
+		map.setView(new L.LatLng(39.77, -86.16), 3).addLayer(cloudmade);
 		
 		var BaseballIcon = L.Icon.extend({
 			iconUrl: 'http://leaflet.cloudmade.com/examples/baseball-marker.png',

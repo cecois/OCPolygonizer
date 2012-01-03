@@ -1,10 +1,17 @@
 <?php
 
-include "dbh.php";
+include "config.php";
+
+$dbh = pg_connect("host=".$dbhost." dbname=".$dbname." user=".$dbuser." password='".$dbpsswd."'");
+        if (!$dbh) {
+            die("Error in connection: " . pg_last_error());
+        }
 $table_name=$_GET['table'];
 
 
-$sql2 = "SELECT gid, st_asgeojson(st_transform(the_geom,4326)) as the_geom from ".$table_name." WHERE ST_Intersects(".$table_name.".the_geom,(SELECT setsrid(the_geom,4326) from dblink('dbname=".$oc_db." port=5432 user=".$oc_id." password=".$oc_pw."','SELECT the_geom FROM oc_geo where rid=".$_GET['id']."') as s(the_geom geometry)))";
+//$sql2 = "SELECT gid, st_asgeojson(st_transform(the_geom,4326)) as the_geom from ".$table_name." WHERE ST_Intersects(".$table_name.".the_geom,(SELECT setsrid(the_geom,4326) from dblink('dbname=".$oc_db." port=5432 user=".$oc_id." password=".$oc_pw."','SELECT the_geom FROM oc_geo where rid=".$_GET['id']."') as s(the_geom geometry)))"; //crossdb query
+
+$sql2 = "SELECT gid, st_asgeojson(st_transform(the_geom,4326)) as the_geom from ".$table_name." WHERE ST_Intersects(".$table_name.".the_geom,(SELECT setsrid(the_geom,4326) from oc_geo where rid=".$_GET['id']."))";
 
 
 $result = pg_query($dbh, $sql2);

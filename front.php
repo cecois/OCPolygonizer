@@ -17,8 +17,17 @@ document.getElementById('poly_frame').src='nom.php?geo_name='+geoname+'&hash='+h
 <select name="geo_name" id="geo_id">
   
 <?php
-include "dbh2.php";
-$sql1 = "select count(*) count, ocurl,geonamesho,hash ochash from oc_geo oc left join dblink('dbname=".$osm_db." port=5432 host=localhost user=".$osm_id." password=".$osm_pw."', 'SELECT ochash FROM geogeo') AS s(ochash char(255)) ON oc.hash = s.ochash where the_geom IS NOT NULL AND s.ochash IS NULL group by ocurl,geonamesho,oc.hash";
+
+include "config.php";
+//include "dbh2.php"; // db connection to oc_geo
+$dbh2 = pg_connect("host=".$dbhost." dbname=".$dbname." user=".$dbuser." password=".$dbpsswd);
+        if (!$dbh2) {
+            die("Error in connection: " . pg_last_error());
+        }
+//$sql1 = "select count(*) count, ocurl,geonamesho,hash ochash from oc_geo oc left join dblink('dbname=".$dbname." port=5432 host=".$dbhost." user=".$dbuser." password=".$dbpsswd."', 'SELECT ochash FROM geogeo') AS s(ochash char(255)) ON oc.hash = s.ochash where the_geom IS NOT NULL AND s.ochash IS NULL group by ocurl,geonamesho,oc.hash"; //Crossdb query
+
+
+$sql1 = "select ocurl,geonamesho,hash from oc_geo oc left join geogeo ge on oc.hash=ge.ochash where the_geom IS NOT NULL AND ge.ochash IS NULL group by ocurl,geonamesho,oc.hash";
 
 
 $result1 = pg_query($dbh2, $sql1);
@@ -26,7 +35,7 @@ $result1 = pg_query($dbh2, $sql1);
      die("Error in SQL query: " . pg_last_error());
  } else {
 while ($row1 = pg_fetch_assoc($result1)) {
-echo '<option value="'.$row1['geonamesho'].':::'.$row1['ochash'].'">'.$row1['geonamesho'].'</option>';
+echo '<option value="'.$row1['geonamesho'].':::'.$row1['hash'].'">'.$row1['geonamesho'].'</option>';
 
 
 }
