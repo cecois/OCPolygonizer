@@ -1,4 +1,4 @@
-tabase setup
+1. Database setup
 
    Postgresql DB Host name, DB name, ID, and Password should be configured in config.php.
    Postgis should be installed in the database. Regarding to postgis installation, please refer to,
