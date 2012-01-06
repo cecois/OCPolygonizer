@@ -273,14 +273,14 @@ $result = pg_query($dbh, $sqlgetsgeo);
 	<div id='map' style='width: 600px; height: 400px'></div>
 
 	<script>
-
+                alert('The result is from nominatum');
 		var map = new L.Map('map');
 	
 		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/22677/256/{z}/{x}/{y}.png',
 			cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
 	
-		map.setView(new L.LatLng(39.77, -86.16), 3).addLayer(cloudmade);
+		map.setView(new L.LatLng(39.77, -86.16), 1).addLayer(cloudmade);
 		
 		var BaseballIcon = L.Icon.extend({
 			iconUrl: 'http://leaflet.cloudmade.com/examples/baseball-marker.png',

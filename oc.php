@@ -38,7 +38,7 @@ echo '<input type=button value="find me!" onclick=find_me(document.getElementByI
 		
 
 echo		"<script type='text/javascript'>
-
+                alert('There was no result in nominatum. We will search urban table');  
 		var map = new L.Map('map');
 		var table='".$_GET['table']."';
 		var hash=".$h.";
@@ -46,7 +46,7 @@ echo		"<script type='text/javascript'>
 			cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
 			cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
 	
-		map.setView(new L.LatLng(39.77, -86.16), 3).addLayer(cloudmade);
+		map.setView(new L.LatLng(39.77, -86.16), 1).addLayer(cloudmade);
 		
 		var BaseballIcon = L.Icon.extend({
 			iconUrl: 'http://leaflet.cloudmade.com/examples/baseball-marker.png',
@@ -161,7 +161,12 @@ function find_me(rid){
 			map.removeLayer(geojsonLayer);
 			map.closePopup();
 			}
-				alert('nothing');
+			alert('nothing! We will search flickr localities polygon!');
+			parent.document.getElementById('poly_frame').src='http://localhost/OCPolygonizer/flicker.php?table=localities&hash=\''+hash+'\'';
+
+
+
+
 			}else{
 			if(geojsonLayer){
 			map.removeLayer(geojsonLayer);

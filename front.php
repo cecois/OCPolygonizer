@@ -36,8 +36,6 @@ $result1 = pg_query($dbh2, $sql1);
  } else {
 while ($row1 = pg_fetch_assoc($result1)) {
 echo '<option value="'.$row1['geonamesho'].':::'.$row1['hash'].'">'.$row1['geonamesho'].'</option>';
-
-
 }
 }
 

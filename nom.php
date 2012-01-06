@@ -3,7 +3,7 @@
 <script type='text/javascript'>
 function find_polygon(url){
 
-document.getElementById('poly_frame').src=url;
+parent.document.getElementById('poly_frame').src=url;
 
 
 }
