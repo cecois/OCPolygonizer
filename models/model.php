@@ -184,6 +184,7 @@ class Model {
 					}
 				}
 			}		
+
 	public function copyUrban($uid, $hash){
 
 			include "/var/config/config.php";
@@ -195,5 +196,66 @@ class Model {
 			$insertsql="insert into geogeo (geomso, ochash, wkb_geometry) select 2,'".$hash."', the_geom from urban where gid=".$uid;
 			$result = pg_query($dbh, $insertsql);
 	}
+
+	public function dispFlicker($rid){
+
+			include "/var/config/config.php";
+			$dbh = pg_connect("host=".$dbhost." dbname=".$dbname." user=".$dbuser." password='".$dbpsswd."'");
+				if (!$dbh) {
+				    die("Error in connection: " . pg_last_error());
+				}
+
+			$sql2 = "SELECT woe_id, st_asgeojson(st_transform(wkb_geometry,4326)) as the_geom from localities WHERE ST_Intersects(localities.wkb_geometry,(SELECT setsrid(the_geom,4326) from oc_geo where rid=".$rid."))";
+
+
+			$result = pg_query($dbh, $sql2);
+			 if (!$result) {
+			     die("Error in SQL query: " . pg_last_error());
+			 } else {
+
+			    $geojson = array(
+			      'type'      => 'FeatureCollection',
+			      'features'  => array()
+			   );
+				$m=0;
+				while ($row = pg_fetch_assoc($result)) {
+				$m++;
+
+			       $feature = array(
+				 'type' => 'Feature',
+				 'geometry' => json_decode($row['the_geom'], true),
+				 'crs' => array(
+				    'type' => 'EPSG',
+				    'properties' => array('code' => '4326')
+				 ),
+				 'properties' => array(
+				    'id' => $row['woe_id']			
+				 )
+			      );
+
+				$woe_id=$row['woe_id'];
+				      array_push($geojson['features'], $feature);
+				}
+				if($m>0){
+					return $geojson=array(
+						'gid'=>$woe_id,
+						'geo'=>json_encode($geojson));
+					}else{
+					return $geojson="no_record";
+					}
+			}
+		}
+
+			public function copyFlicker($uid, $hash){
+
+					include "/var/config/config.php";
+					$dbh = pg_connect("host=".$dbhost." dbname=".$dbname." user=".$dbuser." password='".$dbpsswd."'");
+						if (!$dbh) {
+						    die("Error in connection: " . pg_last_error());
+						}
+
+					$insertsql="insert into geogeo (geomso, ochash, wkb_geometry) select 3,'".$hash."', wkb_geometry from localities where woe_id=".$uid;
+					$result = pg_query($dbh, $insertsql);
+			}
 } 
 ?>

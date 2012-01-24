@@ -19,12 +19,18 @@ $controller->searchIDAction($_GET['url'], $_GET['hash']);
 }elseif($_GET['oid'] and $_GET['hash']){
 $controller = new Controller();
 $controller->copyAction($_GET['oid'], $_GET['hash']);
-}elseif($_GET['rid'] and $_GET['hash']){
+}elseif($_GET['rid'] and $_GET['hash'] and $_GET['table']=='urban'){
 $controller = new Controller();
-$controller->urbanDisplay($_GET['rid'], $_GET['hash']);
-}elseif($_GET['urban_id'] and $_GET['hash']){
+$controller->urbanDisplay($_GET['rid'], $_GET['hash'], $_GET['table']);
+}elseif($_GET['rid'] and $_GET['hash'] and $_GET['table']=='localities'){
 $controller = new Controller();
-$controller->urbanCopy($_GET['urban_id'], $_GET['hash']);
+$controller->flickerDisplay($_GET['rid'], $_GET['hash'], $_GET['table']);
+}elseif($_GET['uid'] and $_GET['hash'] and $_GET['table']=='urban'){
+$controller = new Controller();
+$controller->urbanCopy($_GET['uid'], $_GET['hash']);
+}elseif($_GET['uid'] and $_GET['hash'] and $_GET['table']=='localities'){
+$controller = new Controller();
+$controller->flickerCopy($_GET['uid'], $_GET['hash']);
 }else{
 
 	try {

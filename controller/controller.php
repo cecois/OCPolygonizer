@@ -34,19 +34,20 @@ include_once("/var/www/mvc/models/model.php");
 		$model = new Model();
 		$gjson=$model->searchID($url, $hash);
 		if ($gjson=='no_record'){
+		$table='urban';
 		$control=new Controller();
-		$control->urbanAction($hash);
+		$control->ocgeoAction($hash, $table);
 		}else{
 		include '/var/www/mvc/view/show_osm.php'; 
 		}
 	   }
 
-	public function urbanAction($hash)
+	public function ocgeoAction($hash, $table)
 	   {
 		// configure next dataset in cascade way (nominatum->urban->flicker) in nextmodel, then do searchAction()
 		$model = new Model();
 		$rid=$model->searchUrban($hash);
-		include '/var/www/mvc/view/show_urban.php'; 
+		include '/var/www/mvc/view/show_ocgeo.php'; 
 	   }
 
 	public function copyAction($oid, $hash)
@@ -58,15 +59,16 @@ include_once("/var/www/mvc/models/model.php");
 
 	   }
 
-	public function urbanDisplay($rid, $hash)
+	public function urbanDisplay($rid, $hash, $table)
 	   {
 		//copy data chosen by user to postgresqldb.
 		$model = new Model();
 		$geojson=$model->dispUrban($rid);
 		if ($geojson=='no_record'){
-		//$control=new Controller();
-		//$control->urbanAction($hash);
-		echo "haha";
+		echo "No record in urban. Searching Flicker data";
+		$table='localities';
+		$control=new Controller();
+		$control->ocgeoAction($hash,$table);
 		}else{
 		include '/var/www/mvc/view/disp_urban.php'; 
 		}
@@ -75,6 +77,23 @@ include_once("/var/www/mvc/models/model.php");
 	public function urbanCopy($uid, $hash){
 		$model = new Model();
 		$geojson=$model->copyUrban($uid, $hash);
+		include '/var/www/mvc/view/default.php'; 
+	}
+	public function flickerDisplay($rid, $hash, $table)
+	   {
+		//copy data chosen by user to postgresqldb.
+		$model = new Model();
+		$geojson=$model->dispFlicker($rid);
+		if ($geojson=='no_record'){
+			echo "no record anywhere";
+			include '/var/www/mvc/view/default.php'; 
+		}else{
+		include '/var/www/mvc/view/disp_urban.php'; 
+		}
+	   }
+	public function flickerCopy($uid, $hash){
+		$model = new Model();
+		$geojson=$model->copyFlicker($uid, $hash);
 		include '/var/www/mvc/view/default.php'; 
 	}
     }  
