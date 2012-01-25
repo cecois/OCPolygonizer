@@ -70,7 +70,7 @@ include_once("/var/www/mvc/models/model.php");
 		$control=new Controller();
 		$control->ocgeoAction($hash,$table);
 		}else{
-		include '/var/www/mvc/view/disp_urban.php'; 
+		include '/var/www/mvc/view/disp_data.php'; 
 		}
 
 	   }
@@ -88,7 +88,7 @@ include_once("/var/www/mvc/models/model.php");
 			echo "no record anywhere";
 			include '/var/www/mvc/view/default.php'; 
 		}else{
-		include '/var/www/mvc/view/disp_urban.php'; 
+		include '/var/www/mvc/view/disp_data.php'; 
 		}
 	   }
 	public function flickerCopy($uid, $hash){

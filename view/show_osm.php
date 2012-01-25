@@ -1,5 +1,6 @@
-<?php
-$htmlcontent="<html><head><title>Leaflet GeoJSON example</title><link rel='stylesheet' href='http://leaflet.cloudmade.com/dist/leaflet.css'><script src='http://leaflet.cloudmade.com/dist/leaflet.js'></script><script src='http://leaflet.cloudmade.com/examples/sample-geojson.js' type='text/javascript'></script></head><body>
+<html>
+<head><title>Leaflet GeoJSON example</title><link rel='stylesheet' href='http://leaflet.cloudmade.com/dist/leaflet.css'><script src='http://leaflet.cloudmade.com/dist/leaflet.js'></script><script src='http://leaflet.cloudmade.com/examples/sample-geojson.js' type='text/javascript'></script></head>
+<body>
 	<div id='map' style='width: 600px; height: 400px'></div>
 
 	<script>
@@ -20,7 +21,9 @@ $htmlcontent="<html><head><title>Leaflet GeoJSON example</title><link rel='style
 			iconAnchor: new L.Point(14, 37),
 			popupAnchor: new L.Point(2, -32)
 		});
-		var geojsonLayer = new L.GeoJSON(".$gjson['geo'].");
+		<?php 
+			echo "var geojsonLayer = new L.GeoJSON(".$gjson['geo'].");";
+		?>
 	   	map.addLayer(geojsonLayer);		
 		geojsonLayer.on('featureparse', function (e) {
 		var popupContent = 'I am a Leaflet vector';
@@ -38,7 +41,10 @@ $htmlcontent="<html><head><title>Leaflet GeoJSON example</title><link rel='style
 	
 		map.addLayer(geojsonLayer);
 		
-	</script><form action='/mvc/index.php' method='get'><input type='hidden' name='hash' value='".$hash."'><input type='hidden' name='oid' value='".$gjson['name']."'><input type='submit' value='load into geogeo'/></form></body></html>";
-echo $htmlcontent;
-
+	</script><form action='/mvc/index.php' method='get'>
+<?php
+	echo "<input type='hidden' name='hash' value='".$hash."'><input type='hidden' name='oid' value='".$gjson['name']."'>";
 ?>
+<input type='submit' value='load into geogeo'/></form>
+</body>
+</html>
