@@ -1,0 +1,9 @@
+1. Create folder named "mvc" under web directory so that it should be opened as http://localhost/mvc.
+2. Copy file named "index.php", folder named "controller", "models", "view".
+3. Create config.php in /var/config/config.php and add below parameters to postgresql db.
+<?php
+$dbhost='';
+$dbname='';
+$dbuser='';
+$dbpsswd='';
+?>

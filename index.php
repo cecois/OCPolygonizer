@@ -1,9 +1,6 @@
 <?php
 
- 
-//include_once 'models/model.php';
- 
-//wrap the whole thing in a try-catch block to catch any wayward exceptions!
+
 include_once "controller/controller.php";
 if($_GET['geo_name'] and !$_GET['osm_id']){
 		$place=preg_split('/:::/',$_GET['geo_name']);

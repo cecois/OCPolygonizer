@@ -1,6 +1,6 @@
 <?php
 
-include_once("/var/www/mvc/models/model.php");  
+include_once("./models/model.php");  
  
     class Controller {  
 //        private $_params;
@@ -18,7 +18,7 @@ include_once("/var/www/mvc/models/model.php");
 		$model = new Model();
 		$geo_places=$model->searchDB();
 		
-          	include '/var/www/mvc/view/placelist.php'; 
+          	include './view/placelist.php'; 
 	   }
 	
 	public function osmAction($location, $hash)
@@ -26,7 +26,7 @@ include_once("/var/www/mvc/models/model.php");
 
 		$model = new Model();
 		$html=$model->searchOSM($location, $hash);
-		include '/var/www/mvc/view/osm.php'; 
+		include './view/osm.php'; 
 	   }
 	public function searchIDAction($url, $hash)
 	   {
@@ -38,7 +38,7 @@ include_once("/var/www/mvc/models/model.php");
 		$control=new Controller();
 		$control->ocgeoAction($hash, $table);
 		}else{
-		include '/var/www/mvc/view/show_osm.php'; 
+		include './view/show_osm.php'; 
 		}
 	   }
 
@@ -47,7 +47,7 @@ include_once("/var/www/mvc/models/model.php");
 		// configure next dataset in cascade way (nominatum->urban->flicker) in nextmodel, then do searchAction()
 		$model = new Model();
 		$rid=$model->searchUrban($hash);
-		include '/var/www/mvc/view/show_ocgeo.php'; 
+		include './view/show_ocgeo.php'; 
 	   }
 
 	public function copyAction($oid, $hash)
@@ -55,7 +55,7 @@ include_once("/var/www/mvc/models/model.php");
 		//copy data chosen by user to postgresqldb.
 		$model = new Model();
 		$model->copydata($oid, $hash);
-		include '/var/www/mvc/view/default.php'; 
+		include './view/default.php'; 
 
 	   }
 
@@ -70,14 +70,14 @@ include_once("/var/www/mvc/models/model.php");
 		$control=new Controller();
 		$control->ocgeoAction($hash,$table);
 		}else{
-		include '/var/www/mvc/view/disp_data.php'; 
+		include './view/disp_data.php'; 
 		}
 
 	   }
 	public function urbanCopy($uid, $hash){
 		$model = new Model();
 		$geojson=$model->copyUrban($uid, $hash);
-		include '/var/www/mvc/view/default.php'; 
+		include './view/default.php'; 
 	}
 	public function flickerDisplay($rid, $hash, $table)
 	   {
@@ -86,15 +86,15 @@ include_once("/var/www/mvc/models/model.php");
 		$geojson=$model->dispFlicker($rid);
 		if ($geojson=='no_record'){
 			echo "no record anywhere";
-			include '/var/www/mvc/view/default.php'; 
+			include './view/default.php'; 
 		}else{
-		include '/var/www/mvc/view/disp_data.php'; 
+		include './view/disp_data.php'; 
 		}
 	   }
 	public function flickerCopy($uid, $hash){
 		$model = new Model();
 		$geojson=$model->copyFlicker($uid, $hash);
-		include '/var/www/mvc/view/default.php'; 
+		include './view/default.php'; 
 	}
     }  
 ?>
