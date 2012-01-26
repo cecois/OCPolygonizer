@@ -68,7 +68,8 @@ class Model {
 		$sqlgetsgeo = "select name,osm_id,st_asgeojson(st_transform(way,4326)) as the_geom from planet_osm_polygon where osm_id=-".$relation[2].";";
 		$result = pg_query($dbh, $sqlgetsgeo);
 		 if (!$result) {
-		     die("Error in SQL query: " . pg_last_error());
+//		     die("Error in SQL query: " . pg_last_error());
+		     return $gjson="no_record";		
 		 } else {    
 		       
 		    $geojson = array(
