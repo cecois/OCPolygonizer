@@ -1,9 +1,95 @@
-1. Create folder named "mvc" under web directory so that it should be opened as http://localhost/mvc.
-2. Copy file named "index.php", folder named "controller", "models", "view".
-3. Create config.php in /var/config/config.php and add below parameters to postgresql db.
+1. Installation
+
+(1) Create folder named "mvc" under web directory so that it should be opened as http://localhost/mvc.
+(2) Copy file named "index.php", folder named "controller", "models", "view".
+(3) Create config.php in /var/config/config.php and add below parameters to postgresql db.
 <?php
 $dbhost='';
 $dbname='';
 $dbuser='';
 $dbpsswd='';
 ?>
+
+2. Using OCPolygonizer
+
+OCPolygonizer was developed in MVC (Model, View, Controller) style. The files in the application are listed below
+
+(1) Client
+index.php is the client page which receives and sends directions to controller. The very first running of index.php invokes searchAction() in controller, and 
+it searches data in oc_geo table. Except first running, it receives request from controller as $_GET variables and invokes another action in contoller.
+
+(2) Controller
+controller.php inside controller folder is the controller script of the application.
+
+searchAction() : invokes model's searchDB() function, which queries data in oc_geo table which doesn't exist in geogeo table and it shows results in placelist.php in view.
+
+osmAction()    : invokes model's searchOSM() function, which searches data in nominatum and grabs osm_id. The results will be shown in osm.php in view.
+
+searchIDAction(): invokes model's searchID() function, which queries data in planet_osm_polygon by osm_id. The results will be shown in show_osm.php in view. If there is no data, It invokes ocgeoAction() in controller with "urban" table as variable in controller.
+
+ocgeoAction() : invokes models' searchOcgeo() function, which queries data in table "oc_geo" with now passed "hash" variable. The result wil be shown in show_ocgeo.php of view.
+
+copyAction(): copyAction() will be run if user presses copy data button in GUI. It invokes model's copydata(), which load data into geogeo table.
+
+urbanDisplay(): invokes model's dispUrban() function, which queries data in urban table. The polygon intersecting with oc_geo's point data will be chosen. The result will be shown in disp_data.php in view. If there is no result, it will invoke ocgeoAction() with "hash" variable.
+
+urbanCopy(): invokes model's copyUrban() function, which loads data into geogeo if user presses button.
+
+flickerDisplay(): invokes model's dispFlicker() function, which queries data in localities table. The polygon intersecting with oc_geo's point data will be chosen. The result will be shown in disp_data.php in view. If there is no result, it will invoke default.php in view, which leads to the main client after removing all variables.
+
+flickerCopy(): invokes model's copyFlicker function, which loads data into geogeo if user presses button.
+
+(3) Model
+
+model.php in models folder is the script which defines models.
+
+searchDB(): Queries data (not existing in geogeo) in oc_geo by 
+"select ocurl,geonamesho,hash from oc_geo oc left join geogeo ge on oc.hash=ge.ochash where the_geom IS NOT NULL AND ge.ochash IS NULL group by ocurl,geonamesho,oc.hash"
+
+searchOSM(): invokes nominatum page by curl.
+
+searchID(): grabs osm_id and query into planet_osm_polygon by 
+"select name,osm_id,st_asgeojson(st_transform(way,4326)) as the_geom from planet_osm_polygon where osm_id="
+
+copydata(): load data into table "geogeo" by
+"insert into geogeo (geomso, ochash, wkb_geometry) select 1,hash, way from planet_osm_polygon where osm_id=-".$oid." order by way_area limit 1";
+
+searchOcgeo(): queries data in ocgeo based on hash variable by
+"SELECT * from oc_geo where hash='".$hash."'";
+
+dispUrban(): queries intersecting data in urban table and convert the geometry to geojson and returns it. The sql is like below.
+ "SELECT gid, st_asgeojson(st_transform(the_geom,4326)) as the_geom from urban WHERE ST_Intersects(urban.the_geom,(SELECT setsrid(the_geom,4326) from oc_geo where rid=".$rid."))"
+
+copyUrban(): load data into table geogeo if user presses button by SQL
+"insert into geogeo (geomso, ochash, wkb_geometry) select 2,'".$hash."', the_geom from urban where gid=".$uid"
+
+dispFlicker(): queries intersecting data in localities table and convert the geometry to geojson and returns it. The sql is like below.
+"SELECT woe_id, st_asgeojson(st_transform(wkb_geometry,4326)) as the_geom from localities WHERE ST_Intersects(localities.wkb_geometry,(SELECT setsrid(the_geom,4326) from oc_geo where rid=".$rid."))";
+
+copyFlicker(): load data into table geogeo if user presses button by SQL
+insert into geogeo (geomso, ochash, wkb_geometry) select 3,'".$hash."', wkb_geometry from localities where woe_id=".$uid;
+
+(4) View
+
+default.php: remove all variables and invoke client (index.php)
+
+disp_data.php: display data from urban or localities table on leaflet.
+
+osm.php: replace link to nominatum's details.php to the client file (index.php) in OCPolygonizer.
+
+placelist.php: sist thd geodata from oc_geo table.
+
+show_ocgeo.php: show candidate datasets with given hash
+
+show_osm.php: show data from planet_osm_polygon
+
+
+
+
+
+
+
+
+
+
+
